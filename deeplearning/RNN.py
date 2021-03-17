@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 from keras.datasets import mnist
 
 np.random.seed(1)
@@ -50,7 +51,7 @@ weight1_2 = 0.02 * np.random.random((hidden_size, num_labels))
 
 def get_image_section(layer, row_from, row_to, col_from, col_to):
     section = layer[:, row_from:row_to, col_from:col_to]
-    return section.reshape(-1, 1, row_from - row_to, col_from - col_to)
+    return section.reshape(-1, 1, row_to - row_from, col_to - col_from)
 
 
 for j in range(iteration):
@@ -77,24 +78,24 @@ for j in range(iteration):
 
         kernel_output = flattened_input.dot(kernels)
         layer_1 = tanh(kernel_output.reshape(es[0], -1))
-        dropout_mask = np.randint.randint(2, size=layer_1.shape)
+        dropout_mask = np.random.randint(2, size=layer_1.shape)
         layer_1 *= dropout_mask * 2
         layer_2 = softmax(np.dot(layer_1, weight1_2))
 
         for k in range(batch_size):
             labelset = labels[batch_start + k: batch_end + k + 1]
-            _inc = int(np.argmax[layer_2[k: k + 1] == np.argmax[labelset]])
+            _inc = int(np.argmax(layer_2[k: k + 1]) == np.argmax(labelset))
 
             correct_cnt += _inc
 
-        layer_2_delta = (labels[batch_start:batch_end - layer_2]) / (batch_size * layer_2.shape[0])
+        layer_2_delta = (labels[batch_start:batch_end] - layer_2) / (batch_size * layer_2.shape[0])
         layer_1_delta = layer_2_delta.dot(weight1_2.T) * tanh2deriv(layer_1)
         layer_1_delta *= dropout_mask
 
         weight1_2 += alpha * layer_1.T.dot(layer_2_delta)
         lid_reshape = layer_1_delta.reshape(kernel_output.shape)
         k_update = flattened_input.T.dot(lid_reshape)
-        kernel_output -= alpha * k_update
+        kernels -= alpha * k_update
 
     test_correct_cnt = 0
 
@@ -117,4 +118,12 @@ for j in range(iteration):
         es = expanded_input.shape
         flattened_input = expanded_input.reshape(es[0] * es[1], -1)
 
+        kernel_output = flattened_input.dot(kernels)
+        layer_1 = tanh(kernel_output.reshape(es[0], -1))
+        layer_2 = np.dot(layer_1, weight1_2)
 
+        test_correct_cnt += int(np.argmax(layer_2) == np.argmax(test_labels[i: i + 1]))
+
+    if j % 1 == 0:
+        sys.stdout.write("\n" + "I" + str(j) + " Test-Acc" + str((test_correct_cnt) / float(len(test_images))) +
+                         " Train-acc" + str(correct_cnt / float(len(images))))
