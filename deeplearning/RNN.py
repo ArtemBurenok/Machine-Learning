@@ -15,6 +15,7 @@ labels = one_hot_labels
 
 test_images = x_test.reshape(len(x_test), 28 * 28) / 255
 test_labels = np.zeros((len(y_test), 10))
+
 for i, l in enumerate(y_test):
     test_labels[i][l] = 1
 
