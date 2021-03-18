@@ -46,7 +46,7 @@ class Tensor(object):
                     if self.creation_op == "add":
                         self.creators[0].backward(grad)
                         self.creators[1].backward(grad)
-                    if self.creation_op =="neg":
+                    if self.creation_op == "neg":
                         self.creators[0].backward(self.grad.__neg__())
 
     def __add__(self, other):
@@ -58,6 +58,7 @@ class Tensor(object):
         return Tensor(self.data + other.data)
 
     def __neg__(self):
+
         if self.autograd:
             return Tensor(self.data * -1,
                           autograd=True,
@@ -65,14 +66,35 @@ class Tensor(object):
                           creation_op="neg")
         return Tensor(self.data * -1)
 
+    def __sub__(self, other):
+        if self.autograd and other.autograd:
+            return Tensor(self.data - other.data,
+                          autograd=True,
+                          creators=[self, other],
+                          creation_op="sub")
+        return Tensor(self.data - other.data)
+
+    def __mul__(self, other):
+        if self.data and other.data:
+            return Tensor(self.data * other.data,
+                          autograd=True,
+                          creators=[self, other],
+                          creation_op="mul")
+        return Tensor(self.data * other.data)
+
+    def sum(self, dim):
+        if self.autograd:
+            return Tensor(self.data.sum(dim),
+                          autograd=True,
+                          creators=[self],
+                          creation_op="sum_" + str(dim))
+        return Tensor(self.data.sum(dim))
+
+    def
+
     def __repr__(self):
         return str(self.data.__repr__())
 
     def __str__(self):
         return str(self.data.__str__())
 
-
-x = Tensor([1, 2, 3, 4, 5])
-y = Tensor([2, 2, 2, 2, 2])
-z = x + y
-print(z.backward(Tensor(np.array([1, 1, 1, 1, 1]))))
