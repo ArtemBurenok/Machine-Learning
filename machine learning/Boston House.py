@@ -1,27 +1,26 @@
-from sklearn.datasets import load_breast_cancer
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import cross_val_score
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-import pandas as pd
-from sklearn.linear_model import LinearRegression
+import torch as th
+import torch.nn as nn
 
-cancer = load_breast_cancer()
-data = pd.DataFrame(cancer.data, columns=cancer.feature_names)
-target = pd.DataFrame(cancer.target, columns=["target"])
-"""
-scaler = StandardScaler()
-scaler.fit(data)
-X_scaled = scaler.transform(data)
+x = th.tensor([[1], [2], [3], [4]], dtype=th.float32)
+y = th.tensor([[2], [4], [6], [8]], dtype=th.float32)
 
-pca = PCA(n_components=2)
-pca.fit(X_scaled)
-X_pca = pca.transform(X_scaled)
-"""
-X_train, X_test, y_train, y_test = train_test_split(data, target, random_state=42, test_size=0.2)
+n_sample, n_features = x.shape
 
-model = LinearRegression()
-model.fit(X_train, y_train)
+input_size = n_features
+output_size = n_features
 
-print(model.score(X_train, y_train))
-print(model.score(X_test, y_test))
+model = nn.Linear(input_size, output_size)
+
+loss = nn.MSELoss()
+optimizer = th.optim.SGD(model.parameters(), lr=0.01)
+
+for i in range(100):
+    y_prediction = model(x)
+
+    l = loss(y, y_prediction)
+
+    l.backward()
+
+    optimizer.step()
+    optimizer.zero_grad()
+    print(l)
