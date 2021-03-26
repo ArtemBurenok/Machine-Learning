@@ -27,7 +27,11 @@ class NaiveBayes:
 
         for ind, x in enumerate(self._classes):
             prior = np.log(self._priors[ind])
-            class_conditional =
+            class_conditional = np.sum(np.log(self._pdf(ind, x)))
+            posterior = class_conditional + prior
+            posteriors.append(posterior)
+
+        return self._classes[np.argmax(posteriors)]
 
     def _pdf(self, class_ind, x):
         mean = self._mean[class_ind]
