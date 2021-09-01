@@ -1,9 +1,11 @@
 from keras.datasets import mnist
 import sys, numpy as np
 
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
+(x_train, y_train), (x_test, y_test) = mnist.load_data() # Выгружаем данные
 
 images, labels = (x_train[0:1000].reshape(1000, 28*28) / 255, y_train[0:1000])
+
+# Делаем матрицу 28X28
 
 one_hot_label = np.zeros((len(labels), 10))
 
@@ -26,6 +28,8 @@ alpha, iteration, hidden_size, pixel_per_image, num_labels = (0.005, 500, 40, 78
 weight0_1 = 0.2 * np.random.random((pixel_per_image, hidden_size)) - 0.1
 weight1_2 = 0.2 * np.random.random((hidden_size,num_labels)) - 0.1
 
+# Обучаем
+
 for j in range(iteration):
     error, correct_cnt = (0.0, 0)
     for i in range(len(images)):
@@ -41,7 +45,5 @@ for j in range(iteration):
 
         weight1_2 += alpha * layer1.T.dot(layer_2_delta)
         weight0_1 += alpha * layer0.T.dot(layer_1_delta)
-
-
 
     print("Error: " + str(error / float(len(images))))

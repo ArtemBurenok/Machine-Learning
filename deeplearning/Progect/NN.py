@@ -22,4 +22,3 @@ model.summary()
 
 history = model.fit(X_train, y_train, epochs=10, batch_size=32, validation_split=0.2)
 
-embedding_layer = Embedding(1000, 64)
