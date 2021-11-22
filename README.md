@@ -1,5 +1,5 @@
 # Machine-Learning
 
-In that repository I practicle machin learning algoritms. And learn scikit-learn, tensorflow, numpy and other library for machine learning.
+In that repository I practicle machine learning algoritms. And learn with scikit-learn, tensorflow, numpy and other library for machine learning.
+Also show different ML-progects.
 
-I repeat, this repository for training and write a drafts.
