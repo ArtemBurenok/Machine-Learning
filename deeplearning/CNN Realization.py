@@ -62,7 +62,7 @@ for j in range(iteration):
         layer_0 = images[batch_start:batch_end]
         layer_0 = layer_0.reshape(layer_0.shape[0], 28, 28)
         # layer_0.shape
-        
+
         sects = list()
         for row_start in range(layer_0.shape[1] - kernel_rows):
             for col_start in range(layer_0.shape[2] - kernel_cols):
